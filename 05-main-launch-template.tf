@@ -20,6 +20,7 @@ resource "aws_launch_template" "this" {
   instance_type          = var.instance_type
   ebs_optimized          = var.ebs_optimized
   update_default_version = var.update_default_version
+  key_name = var.instance_keypair
 
 
   # TODO : change the key_name, and implement a key pair
@@ -33,13 +34,13 @@ resource "aws_launch_template" "this" {
   #   associate_public_ip_address = true
   # }
 
-  # vpc_security_group_ids = ["sg-12345678"]
+  vpc_security_group_ids = [module.private_sg.security_group_id]
 
   tag_specifications {
     resource_type = "instance"
 
     tags = {
-      Name = "test"
+      Name = "sig-asg"
     }
   }
 }
