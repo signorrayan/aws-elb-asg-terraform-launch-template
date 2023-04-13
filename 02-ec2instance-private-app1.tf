@@ -19,5 +19,5 @@ module "ec2_private_app1" {
 
 resource "aws_key_pair" "key_pair" {
   key_name   = var.instance_keypair
-  public_key = file("~/.ssh/awsec2server.pub")
+  public_key = file("./pubkey/awsec2server.pub")
 }
