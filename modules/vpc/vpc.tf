@@ -1,7 +1,18 @@
+locals {
+  owners      = var.business_divsion
+  environment = var.environment
+  name        = "${var.business_divsion}-${var.environment}"
+  common_tags = {
+    owners      = local.owners
+    environment = local.environment
+  }
+}
+
+
 # Create VPC Terraform Module
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.78.0"
+  version = "4.0.1"
 
   # VPC Basic Details
   name            = "${local.name}-${var.vpc_name}"
@@ -10,10 +21,10 @@ module "vpc" {
   public_subnets  = var.vpc_public_subnets
   private_subnets = var.vpc_private_subnets
 
-  # Database Subnets
-  database_subnets                   = var.vpc_database_subnets
-  create_database_subnet_group       = var.vpc_create_database_subnet_group
-  create_database_subnet_route_table = var.vpc_create_database_subnet_route_table
+  ## Database Subnets
+  # database_subnets                   = var.vpc_database_subnets
+  # create_database_subnet_group       = var.vpc_create_database_subnet_group
+  # create_database_subnet_route_table = var.vpc_create_database_subnet_route_table
   # create_database_internet_gateway_route = true
   # create_database_nat_gateway_route = true
 

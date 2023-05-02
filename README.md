@@ -1,8 +1,19 @@
 # terraform-aws-elb-asg-launch-templates
 
 This is a sample of AWS ELB (Elastic Load Balancer), ASG (Auto Scaling Groups), Launch Template.
+The instances will be created using launch templates and autoscaling groups.
+
 
 - Multiple modules have been used for [AWS EC2 instances](https://github.com/signorrayan/aws-ec2-terraform-module), security-groups, VPCs, ELB.
+
+
+### Architecture:
+![alt text](assets/architecture.png)
+
+#### You can connect to the private instances using SSH ProxyJump:
+```bash
+ssh -i private_key -J <USERNAME@BASTION_HOST_IP> <USERNAME@PRIVATE_INSTANCE_IP>
+```
 
 
 ### Sample Output after executing `terraform apply`:

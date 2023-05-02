@@ -1,5 +1,5 @@
 #####################################
-# Generic
+# Generic Input Variables
 #####################################
 
 variable "region" {
@@ -9,6 +9,8 @@ variable "region" {
 }
 
 
+#####################################
+# Launch Template Input Variables
 #####################################
 variable "template_name" {
   description = "The name of aws launch template"
@@ -40,13 +42,45 @@ variable "ebs_optimized" {
   default     = false
 }
 
+variable "update_default_version" {
+  type    = bool
+  default = true
+}
+
+variable "delete_on_termination" {
+  type    = bool
+  default = true
+}
+
+variable "volume_type" {
+  description = "the type of EBS"
+  type        = string
+  default     = "gp2"
+}
+
+variable "monitoring" {
+  description = "To enable monitoring or not"
+  type        = bool
+  default     = true
+}
+
+#####################################
+# Instances Input Variables
+#####################################
+
 variable "ami" {
   description = "ID of AMI to use for the instance"
   type        = string
   default     = null
 }
 
-variable "instance_type" {
+variable "private_instance_type" {
+  description = "The type of configurations of computing resources"
+  type        = string
+  default     = "t3.micro"
+}
+
+variable "bastion_instance_type" {
   description = "The type of configurations of computing resources"
   type        = string
   default     = "t3.micro"
@@ -70,11 +104,22 @@ variable "business_divsion" {
   default     = "DevOps"
 }
 
+variable "device_name" {
+  type        = string
+  description = "The name of the device to mount."
+  default     = "/dev/sda1"
+}
+
+variable "instance_count" {
+  description = "The number of EC2 Instances that want to create."
+  type        = number
+  default     = 3
+}
 
 
-#######################
-# VPC Input Variables #
-#######################
+#####################################
+# VPC Input Variables
+#####################################
 
 # VPC Name
 variable "vpc_name" {
@@ -147,33 +192,6 @@ variable "vpc_single_nat_gateway" {
   default     = true
 }
 
-variable "private_instance_count" {
-  description = "The number of EC2 Instances that want to create."
-  type        = number
-  default     = 1
-}
-
-variable "update_default_version" {
-  type    = bool
-  default = true
-}
-
-variable "delete_on_termination" {
-  type    = bool
-  default = true
-}
-
-variable "volume_type" {
-  description = "the type of EBS"
-  type        = string
-  default     = "gp2"
-}
-
-variable "monitoring" {
-  description = "To enable monitoring or not"
-  type        = bool
-  default     = true
-}
 
 ####################################
 # Autoscaling group
@@ -214,7 +232,16 @@ variable "asg_tag_propagate_at_launch" {
   default = true
 }
 
-################################################
+variable "enable_asg_scale_down" {
+  type    = bool
+  default = false
+}
+
+variable "enable_asg_scale_up" {
+  type    = bool
+  default = false
+}
+
 variable "sns_topic_endpoint" {
   description = "The endpoint email to send notifications"
   type        = string
@@ -225,12 +252,27 @@ variable "sns_topic_protocol" {
   default = "email"
 }
 
+variable "bastion_asg_desired_capacity" {
+  type    = number
+  default = 1
+}
+
+variable "bastion_asg_max_size" {
+  type    = number
+  default = 2
+}
+
+variable "bastion_asg_min_size" {
+  type    = number
+  default = 1
+}
+
 ################################################
 
-variable "AWS_ACCESS_KEY_ID" {
-  type = string
-}
-
-variable "AWS_SECRET_ACCESS_KEY" {
-  type = string
-}
+# variable "AWS_ACCESS_KEY_ID" {
+#   type = string
+# }
+#
+# variable "AWS_SECRET_ACCESS_KEY" {
+#   type = string
+# }

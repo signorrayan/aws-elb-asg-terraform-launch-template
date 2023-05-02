@@ -1,4 +1,70 @@
 ########################################################
+# Bastion Launch Template Outputs
+########################################################
+
+output "bastion_launch_template_id" {
+  description = "Launch Template ID"
+  value       = aws_launch_template.bastion.id
+}
+
+output "bastion_launch_template_latest_version" {
+  description = "Launch Template Latest Version"
+  value       = aws_launch_template.bastion.latest_version
+}
+
+output "bastion_public_ip" {
+  value = aws_launch_template.bastion.network_interfaces.associate_public_ip_address
+}
+
+# Autoscaling Outputs
+output "bastion_autoscaling_group_id" {
+  description = "Autoscaling Group ID"
+  value       = aws_autoscaling_group.bastion.id
+}
+
+output "bastion_autoscaling_group_name" {
+  description = "Autoscaling Group Name"
+  value       = aws_autoscaling_group.bastion.name
+}
+
+output "bastion_autoscaling_group_arn" {
+  description = "Autoscaling Group ARN"
+  value       = aws_autoscaling_group.bastion.arn
+}
+
+
+########################################################
+# Private Launch Template Outputs
+########################################################
+
+output "private_launch_template_id" {
+  description = "Launch Template ID"
+  value       = aws_launch_template.private.id
+}
+
+output "private_launch_template_latest_version" {
+  description = "Launch Template Latest Version"
+  value       = aws_launch_template.private.latest_version
+}
+
+# Autoscaling Outputs
+output "private_autoscaling_group_id" {
+  description = "Autoscaling Group ID"
+  value       = aws_autoscaling_group.private.id
+}
+
+output "private_autoscaling_group_name" {
+  description = "Autoscaling Group Name"
+  value       = aws_autoscaling_group.private.name
+}
+
+output "private_autoscaling_group_arn" {
+  description = "Autoscaling Group ARN"
+  value       = aws_autoscaling_group.private.arn
+}
+
+
+########################################################
 # VPC Output Values
 ########################################################
 
@@ -34,10 +100,9 @@ output "nat_public_ips" {
 
 # VPC AZs
 output "azs" {
-  description = "A list of availability zones spefified as argument to this module"
+  description = "A list of availability zones specified as argument to this module"
   value       = module.vpc.azs
 }
-
 
 
 ########################################################
@@ -77,85 +142,34 @@ output "private_sg_group_name" {
 # AWS EC2 Instance Terraform Outputs
 ########################################################
 
-# Public EC2 Instances - Bastion Host
-output "ec2_bastion_public_instance_ids" {
-  description = "List of IDs of instances"
-  value       = module.ec2_public.id
-}
-output "ec2_bastion_public_ip" {
-  description = "List of Public ip address assigned to the instances"
-  value       = module.ec2_public.public_ip
-}
-
-output "ec2_bastion_security_group_ids" {
-  value = module.ec2_public.security_gruops
-}
-
-# App1 - Private EC2 Instances
-## ec2_private_instance_ids
-output "app1_ec2_private_instance_ids" {
-  description = "List of IDs of instances"
-  value       = module.ec2_private_app1.*.id
-}
-## ec2_private_ip
-output "app1_ec2_private_ip" {
-  description = "List of private IP addresses assigned to the instances"
-  value       = module.ec2_private_app1.*.private_ip
-}
-
-output "app1_ec2_security_groups" {
-  value = module.ec2_private_app1.security_gruops
-}
-
-# App2 - Private EC2 Instances
-## ec2_private_instance_ids
-output "app2_ec2_private_instance_ids" {
-  description = "List of IDs of instances"
-  value       = module.ec2_private_app2.id
-}
-## ec2_private_ip
-output "app2_ec2_private_ip" {
-  description = "List of private IP addresses assigned to the instances"
-  value       = module.ec2_private_app2.private_ip
-}
-
-output "app2_ec2_security_groups" {
-  value = module.ec2_private_app1.security_gruops
-}
-
-
-########################################################
-# Terraform AWS Classic Load Balancer (ELB-CLB) Outputs
-########################################################
-
-# output "this_elb_id" {
-#   description = "The name of the ELB"
-#   value       = module.elb.this_elb_id
+# # Public EC2 Instances - Bastion Host
+# output "ec2_bastion_public_ids" {
+#   description = "List of IDs of instances"
+#   value       = module.ec2_public.id
+# }
+# output "ec2_bastion_public_ip" {
+#   description = "List of Public ip address assigned to the instances"
+#   value       = module.ec2_public.public_ip
 # }
 #
-# output "this_elb_name" {
-#   description = "The name of the ELB"
-#   value       = module.elb.this_elb_name
+# output "ec2_bastion_security_group_ids" {
+#   value = module.ec2_public.security_gruops
 # }
 #
-# output "this_elb_dns_name" {
-#   description = "The DNS name of the ELB"
-#   value       = module.elb.this_elb_dns_name
+# # App1 - Private EC2 Instances
+# ## ec2_private_instance_ids
+# output "app1_ec2_private_instance_ids" {
+#   description = "List of IDs of instances"
+#   value       = module.ec2_private_app1.*.id
+# }
+# ## ec2_private_ip
+# output "app1_ec2_private_ip" {
+#   description = "List of private IP addresses assigned to the instances"
+#   value       = module.ec2_private_app1.*.private_ip
 # }
 #
-# output "this_elb_instances" {
-#   description = "The list of instances in the ELB (if may be outdated, because instances are attached using elb_attachment resource)"
-#   value       = module.elb.this_elb_instances
-# }
-#
-# output "this_elb_source_security_group_id" {
-#   description = "The ID of the security group that you can use as part of your inbound rules for your load balancer's back-end application instances"
-#   value       = module.elb.this_elb_source_security_group_id
-# }
-#
-# output "this_elb_zone_id" {
-#   description = "The canonical hosted zone ID of the ELB (to be used in a Route 53 Alias record)"
-#   value       = module.elb.this_elb_zone_id
+# output "app1_ec2_security_groups" {
+#   value = module.ec2_private_app1.security_gruops
 # }
 
 
@@ -226,36 +240,4 @@ output "target_group_names" {
 output "target_group_attachments" {
   description = "ARNs of the target group attachment IDs."
   value       = module.alb.target_group_attachments
-}
-
-
-
-########################################################
-# Launch Template Outputs
-########################################################
-
-output "launch_template_id" {
-  description = "Launch Template ID"
-  value       = aws_launch_template.this.id
-}
-
-output "launch_template_latest_version" {
-  description = "Launch Template Latest Version"
-  value       = aws_launch_template.this.latest_version
-}
-
-# Autoscaling Outputs
-output "autoscaling_group_id" {
-  description = "Autoscaling Group ID"
-  value       = aws_autoscaling_group.this.id
-}
-
-output "autoscaling_group_name" {
-  description = "Autoscaling Group Name"
-  value       = aws_autoscaling_group.this.name
-}
-
-output "autoscaling_group_arn" {
-  description = "Autoscaling Group ARN"
-  value       = aws_autoscaling_group.this.arn
 }
