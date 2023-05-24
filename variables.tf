@@ -77,13 +77,13 @@ variable "ami" {
 variable "private_instance_type" {
   description = "The type of configurations of computing resources"
   type        = string
-  default     = "t3.micro"
+  default     = "t2.micro"
 }
 
 variable "bastion_instance_type" {
   description = "The type of configurations of computing resources"
   type        = string
-  default     = "t3.micro"
+  default     = "t2.micro"
 }
 
 variable "instance_keypair" {
@@ -125,7 +125,7 @@ variable "instance_count" {
 variable "vpc_name" {
   description = "VPC Name"
   type        = string
-  default     = "myvpc"
+  default     = "sig-vpc"
 }
 
 # VPC CIDR Block

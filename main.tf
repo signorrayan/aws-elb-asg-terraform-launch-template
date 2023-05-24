@@ -3,12 +3,50 @@
 # ================================================================= #
 
 module "vpc" {
-  source = "./modules/vpc"
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "4.0.1"
+
+  # VPC Basic Details
+  name            = "${local.name}-${var.vpc_name}"
+  cidr            = var.vpc_cidr_block
+  azs             = var.vpc_availability_zones
+  public_subnets  = var.vpc_public_subnets
+  private_subnets = var.vpc_private_subnets
+
+  ## Database Subnets
+  # database_subnets                   = var.vpc_database_subnets
+  # create_database_subnet_group       = var.vpc_create_database_subnet_group
+  # create_database_subnet_route_table = var.vpc_create_database_subnet_route_table
+  # create_database_internet_gateway_route = true
+  # create_database_nat_gateway_route = true
+
+  # NAT Gateways - Outbound Communication
+  enable_nat_gateway = var.vpc_enable_nat_gateway
+  single_nat_gateway = var.vpc_single_nat_gateway
+
+  # VPC DNS Parameters
+  enable_dns_hostnames = true
+  enable_dns_support   = true
+
+
+  tags     = local.common_tags
+  vpc_tags = local.common_tags
+
+  # Additional Tags to Subnets
+  public_subnet_tags = {
+    Type = "Public Subnets"
+  }
+  private_subnet_tags = {
+    Type = "Private Subnets"
+  }
+  database_subnet_tags = {
+    Type = "Private Database Subnets"
+  }
 }
 
 
 # Application Load Balancer (ALB)
-# -------------------------------
+# ===============================
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "8.6.0"
@@ -59,7 +97,7 @@ module "alb" {
 
 
 # Security Group for Private EC2 Instances
-# ----------------------------------------
+# ========================================
 module "private_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.17.1"
@@ -76,7 +114,7 @@ module "private_sg" {
 
 
 # Security Group for Public Load Balancer
-# ---------------------------------------
+# =======================================
 module "loadbalancer_sg" {
   source = "terraform-aws-modules/security-group/aws"
   # version = "3.18.0"
@@ -104,7 +142,7 @@ module "loadbalancer_sg" {
 
 
 # Security Group for Public Bastion Host
-# --------------------------------------
+# ======================================
 module "public_bastion_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "4.17.1"
@@ -121,7 +159,7 @@ module "public_bastion_sg" {
 }
 
 # ================================================================= #
-#                    End of imported modules                        #
+# =================== End of imported modules ===================== #
 # ================================================================= #
 
 
@@ -176,7 +214,7 @@ resource "aws_launch_template" "private" {
 
 
 ########################################################################
-###################### Private AutoScaling Group #######################
+################## Private AutoScaling Group Resource ##################
 ########################################################################
 
 # Autoscaling Group Resource
@@ -222,7 +260,7 @@ resource "aws_autoscaling_group" "private" {
 #==========================
 ## SNS - Topic
 resource "aws_sns_topic" "private_asg_sns_topic" {
-  name = "asg-sns-topic"
+  name_prefix = "private-asg-sns-topic-"
 }
 
 ## SNS - Subscription
@@ -283,7 +321,7 @@ resource "aws_autoscaling_policy" "alb_target_requests_greater_than_yy" {
 
 
 # Create Scheduled Actions for private instances
-#===============================================
+# ==============================================
 ### Create Scheduled Action-1: Increase capacity during business hours
 resource "aws_autoscaling_schedule" "increase_capacity_7am" {
   scheduled_action_name  = "increase-capacity-7am"
@@ -360,12 +398,12 @@ resource "aws_launch_template" "bastion" {
 }
 
 
-# ================================================================= #
-# ================== Bastion AutoScaling Group ==================== #
-# ================================================================= #
+#####################################################################
+#################### Bastion AutoScaling Group ######################
+#####################################################################
 
 # Autoscaling Group Resource
-# --------------------------
+# ==========================
 resource "aws_autoscaling_group" "bastion" {
   name_prefix         = var.asg_name_prefix
   desired_capacity    = var.bastion_asg_desired_capacity
@@ -402,7 +440,7 @@ resource "aws_autoscaling_group" "bastion" {
 
 
 # Bastion Autoscaling Notifications
-# ---------------------------------
+# =================================
 ## SNS - Topic
 resource "aws_sns_topic" "bastion_asg_sns_topic" {
   name_prefix = "bastion-asg-sns-topic-"
@@ -429,7 +467,7 @@ resource "aws_autoscaling_notification" "bastion_asg_notifications" {
 
 
 # Bastion Target Tracking Scaling Policies
-# ----------------------------------------
+# ========================================
 # TTS - Scaling Policy-1: Based on CPU Utilization
 # Define Autoscaling Policies and Associate them to Autoscaling Group
 resource "aws_autoscaling_policy" "bastion_avg_cpu_policy_greater_than_xx" {

@@ -12,10 +12,6 @@ output "bastion_launch_template_latest_version" {
   value       = aws_launch_template.bastion.latest_version
 }
 
-output "bastion_public_ip" {
-  value = aws_launch_template.bastion.network_interfaces.associate_public_ip_address
-}
-
 # Autoscaling Outputs
 output "bastion_autoscaling_group_id" {
   description = "Autoscaling Group ID"
